@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: wandora
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/activities
+    envVars:
+      - key: WANDORA_SECRET_KEY
+        generateValue: true
