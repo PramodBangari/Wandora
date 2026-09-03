@@ -8,3 +8,19 @@ services:
     envVars:
       - key: WANDORA_SECRET_KEY
         generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: WANDORA_EMAIL_MODE
+        value: smtp
+      - key: WANDORA_SMTP_HOST
+        sync: false
+      - key: WANDORA_SMTP_PORT
+        value: 587
+      - key: WANDORA_SMTP_USERNAME
+        sync: false
+      - key: WANDORA_SMTP_PASSWORD
+        sync: false
+      - key: WANDORA_FROM_EMAIL
+        sync: false
+      - key: WANDORA_FROM_NAME
+        value: Wandora

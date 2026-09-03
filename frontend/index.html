@@ -1,493 +1,103 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Wandora — Explore Activities</title>
+<head><script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wandora — Travel together</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#f5f6f8;color:#18202a}
-header{height:68px;background:#fff;border-bottom:1px solid #e5e8ed;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:1000}
-.logo{font-size:25px;font-weight:800;letter-spacing:-1px}.logo span{color:#ff6848}
-.nav{display:flex;gap:5px}.nav button{border:0;background:none;padding:10px 12px;border-radius:9px;cursor:pointer;color:#5d6674}.nav .active{background:#fff0ec;color:#e84f30;font-weight:700}
-.primary{border:0;background:#ff6848;color:#fff;padding:10px 15px;border-radius:9px;font-weight:700;cursor:pointer}.primary:hover{background:#ed5b3c}
-main{max-width:1400px;margin:auto;padding:24px}
-.hero{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.hero h1{margin:0;font-size:28px}.hero p{color:#697386;margin:6px 0}
-.controls{background:#fff;border:1px solid #e5e8ed;border-radius:14px;padding:12px;display:flex;gap:10px;margin-bottom:18px}
-.search,select{border:1px solid #dfe3e8;border-radius:9px;padding:11px;background:#fff}.search{flex:1}
-.layout{display:grid;grid-template-columns:420px 1fr;gap:18px}.panel{background:#fff;border:1px solid #e5e8ed;border-radius:14px;overflow:hidden}
-.panelhead{padding:15px 17px;border-bottom:1px solid #eee;display:flex;justify-content:space-between}.panelhead span{color:#697386;font-size:12px}
-.list{height:650px;overflow:auto}.card{padding:15px 17px;border-bottom:1px solid #f0f1f3;cursor:pointer}.card:hover,.card.selected{background:#fff8f5}.card h3{margin:0 0 6px;font-size:14px}.meta{font-size:12px;color:#687386;line-height:1.7}.tag{display:inline-block;background:#f1f3f6;padding:4px 8px;border-radius:999px;font-size:10px;margin-top:7px}
-.map{height:650px}.empty{text-align:center;padding:60px 25px;color:#697386}.empty h3{color:#18202a}
-.modal{display:none;position:fixed;inset:0;background:#0005;z-index:2000;align-items:center;justify-content:center}.modal.show{display:flex}
-.box{background:#fff;width:min(560px,92vw);border-radius:16px;padding:22px}.box h2{margin:0 0 18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid input,.grid textarea,.grid select{width:100%;border:1px solid #dfe3e8;border-radius:8px;padding:10px}.grid textarea{grid-column:1/-1;min-height:85px}.full{grid-column:1/-1}
-.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.secondary{border:1px solid #ddd;background:#fff;padding:10px 14px;border-radius:9px;cursor:pointer}
-.auth-actions{display:flex;align-items:center;gap:8px}.user-pill{border:1px solid #e5e8ed;background:#fff;padding:8px 11px;border-radius:999px;cursor:pointer;font-weight:700}.profile-avatar{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#ffe7df;color:#d94f32;font-size:12px;margin-right:5px}.toast{position:fixed;right:20px;bottom:20px;background:#18202a;color:#fff;padding:12px 16px;border-radius:9px;display:none;z-index:3000}
-@media(max-width:900px){.layout{grid-template-columns:1fr}.list,.map{height:500px}.nav{display:none}}
-@media(max-width:600px){main{padding:14px}.controls{flex-wrap:wrap}.search{flex-basis:100%}.grid{grid-template-columns:1fr}.hero{gap:10px}}
+:root{--brand:#ff6848;--brand2:#ff8a68;--ink:#17202a;--muted:#697386;--bg:#f7f7f8;--line:#e8eaee;--card:#fff;--soft:#fff1ed}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 28px;gap:26px;position:sticky;top:0;z-index:1000}.logo{font-size:27px;font-weight:900;letter-spacing:-1.5px}.logo span{color:var(--brand)}.nav{display:flex;gap:4px;flex:1;justify-content:center}.nav button{border:0;background:transparent;padding:11px 14px;border-radius:12px;color:#5d6674}.nav button.active{background:var(--soft);color:#e95132;font-weight:800}.auth-actions{display:flex;gap:8px;align-items:center}.primary{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:11px 16px;font-weight:800}.primary:hover{background:#ed5b3c}.secondary{background:#fff;border:1px solid #dfe3e8;border-radius:12px;padding:10px 14px}.user-pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-weight:700}
+main{max-width:1450px;margin:auto;padding:25px}.view{display:none}.view.active{display:block}.topline{display:flex;justify-content:space-between;align-items:end;margin-bottom:17px}.topline h1{font-size:31px;margin:0}.topline p{margin:6px 0 0;color:var(--muted)}.location{font-weight:800;color:#394150}.searchbar{display:flex;gap:10px;background:#fff;border:1px solid var(--line);padding:11px;border-radius:16px;margin-bottom:16px}.searchbar input{flex:1;border:0;outline:0}.searchbar select{border:1px solid #dfe3e8;border-radius:10px;padding:8px;background:#fff}
+.explore-grid{display:grid;grid-template-columns:420px 1fr;gap:17px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.panelhead{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.panelhead small{color:var(--muted)}.list{height:650px;overflow:auto}.map{height:650px}.activity{padding:16px 18px;border-bottom:1px solid #f0f1f3;cursor:pointer}.activity:hover,.activity.selected{background:#fff8f5}.activity-top{display:flex;justify-content:space-between;gap:10px}.activity h3{margin:0 0 7px;font-size:16px}.activity p{margin:4px 0;color:var(--muted);font-size:13px}.tag{display:inline-block;background:#f1f3f6;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}.join{margin-top:10px;width:100%;padding:9px;border-radius:10px;border:0;background:#18202a;color:#fff;font-weight:800}.join:disabled{opacity:.45}.empty{text-align:center;padding:70px 25px;color:var(--muted)}.empty h3{color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.person,.trip{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px}.avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#ffe6df;display:flex;align-items:center;justify-content:center;font-weight:900;color:#df5538}.person-head{display:flex;gap:12px;align-items:center}.person h3,.trip h3{margin:0}.muted{color:var(--muted);font-size:13px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0}.chip{background:#f3f4f6;padding:5px 8px;border-radius:999px;font-size:11px}.section-title{margin:26px 0 13px}
+.detail{display:grid;grid-template-columns:1.3fr .7fr;gap:17px}.detail-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.detail-card h2{margin-top:0}.chat{height:430px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;padding:10px}.msg{margin:9px 0}.msg b{font-size:12px}.msg p{display:inline-block;background:#f1f3f6;border-radius:12px;padding:9px 11px;margin:4px 0;max-width:80%;font-size:13px}.msg.mine{text-align:right}.msg.mine p{background:var(--soft)}.chatform{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:10px}.chatform input{flex:1;border:1px solid #dfe3e8;border-radius:10px;padding:10px}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:2000;align-items:center;justify-content:center}.modal.show{display:flex}.box{background:#fff;width:min(580px,94vw);max-height:92vh;overflow:auto;border-radius:20px;padding:24px}.box h2{margin:0 0 17px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.grid input,.grid textarea,.grid select{width:100%;border:1px solid #dfe3e8;border-radius:10px;padding:11px}.grid textarea{min-height:95px;resize:vertical}.full{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.toast{position:fixed;right:20px;bottom:20px;background:#18202a;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:3000}
+@media(max-width:900px){header{padding:0 14px}.nav{display:none}.explore-grid,.detail{grid-template-columns:1fr}.map{height:430px}.list{height:auto;max-height:520px}.cards{grid-template-columns:1fr 1fr}}@media(max-width:600px){main{padding:14px}.topline{align-items:start}.topline h1{font-size:25px}.searchbar{flex-wrap:wrap}.searchbar input{flex-basis:100%}.cards{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}.auth-actions .primary{display:none}}
+
+.auth-box{max-width:440px}.google-auth-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 0 4px}.google-note{font-size:13px;color:#6b7280;margin:0}.auth-divider{display:flex;align-items:center;gap:10px;color:#9aa1ad;font-size:12px;margin:18px 0}.auth-divider:before,.auth-divider:after{content:"";height:1px;background:#e5e7eb;flex:1}.small{font-size:13px}.g_id_signin{margin:auto}.auth-tabs{display:flex;background:#f4f5f7;border-radius:12px;padding:4px;margin:18px 0 14px}.auth-tab{flex:1;border:0;background:transparent;padding:9px;border-radius:9px;font-weight:700;color:#697386}.auth-tab.active{background:#fff;color:#17202a;box-shadow:0 1px 4px #0001}.auth-pane{display:none}.auth-pane.active{display:block}.auth-form{display:grid;gap:10px}.auth-form input{width:100%;border:1px solid #dfe3e8;border-radius:10px;padding:11px;outline:none}.auth-form input:focus{border-color:#ff6848;box-shadow:0 0 0 3px #ff684814}.auth-link{border:0;background:transparent;color:#e95132;font-weight:700;padding:2px 0}.auth-helper{text-align:center;margin:9px 0 0}.code-input{text-align:center;letter-spacing:7px;font-size:22px;font-weight:800}.auth-back{margin-bottom:10px}.auth-error{color:#c0392b;font-size:13px;min-height:18px}.password-note{font-size:12px;color:#7a8494;margin:0}.auth-primary{width:100%;padding:11px;border-radius:11px;border:0;background:var(--brand);color:#fff;font-weight:800}.auth-primary:hover{background:#ed5b3c}.auth-secondary-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:2px}.auth-box{max-width:460px}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">Wan<span>d</span>ora</div>
-  <nav class="nav">
-    <button class="nav-btn active" data-view="explore" onclick="switchView('explore')">Explore</button>
-    <button class="nav-btn" data-view="activities" onclick="switchView('activities')">Activities</button>
-    <button class="nav-btn" onclick="comingSoon('People')">People</button>
-    <button class="nav-btn" onclick="comingSoon('Messages')">Messages</button>
-    <button class="nav-btn" onclick="comingSoon('My Trips')">My Trips</button>
-  </nav>
-  <div class="auth-actions">
-    <button id="loginBtn" class="secondary" onclick="openAuthModal()">Log in</button>
-    <button id="profileBtn" class="user-pill" style="display:none" onclick="openProfileModal()"></button>
-    <button class="primary" onclick="openModal()">+ Create Activity</button>
-  </div>
-</header>
-
+<header><div class="logo">Wan<span>dora</span></div><nav class="nav"><button class="nav-btn active" data-view="explore" onclick="switchView('explore')">Explore</button><button class="nav-btn" data-view="activities" onclick="switchView('activities')">Activities</button><button class="nav-btn" data-view="people" onclick="switchView('people')">People</button><button class="nav-btn" data-view="messages" onclick="switchView('messages')">Messages</button><button class="nav-btn" data-view="trips" onclick="switchView('trips')">My Trips</button></nav><div class="auth-actions"><button id="loginBtn" class="secondary" onclick="openAuthModal()">Log in</button><button id="profileBtn" class="user-pill" style="display:none" onclick="openProfileModal()"></button><button class="primary" onclick="openCreate()">+ Create Activity</button></div></header>
 <main>
-  <section class="hero">
-    <div>
-      <h1 id="pageTitle">Explore activities</h1>
-      <p id="pageSubtitle">Discover what's happening around Bengaluru and meet fellow travelers.</p>
-    </div>
-    <strong id="count">0 activities</strong>
-  </section>
-
-  <div class="controls">
-    <input id="search" class="search" placeholder="Search activity or location...">
-    <select id="category"><option value="">All categories</option></select>
-  </div>
-
-  <div class="layout">
-    <section class="panel">
-      <div class="panelhead"><b>Activities</b><span id="status">Loading...</span></div>
-      <div id="list" class="list"></div>
-    </section>
-    <section class="panel">
-      <div id="map" class="map"></div>
-    </section>
-  </div>
+<section id="exploreView" class="view active"><div class="topline"><div><h1>Explore Bengaluru</h1><p>Meet people. Find something to do. Go together.</p></div><div class="location">📍 Bengaluru</div></div><div class="searchbar"><input id="search" placeholder="Search activities or places..."><select id="category"><option value="">All categories</option></select></div><div class="explore-grid"><section class="panel"><div class="panelhead"><b>Happening nearby</b><small id="count">0 activities</small></div><div id="list" class="list"></div></section><section class="panel"><div id="map" class="map"></div></section></div></section>
+<section id="activitiesView" class="view"><div class="topline"><div><h1>Activities</h1><p>Join something happening around you.</p></div><button class="primary" onclick="openCreate()">+ Create Activity</button></div><div class="searchbar"><input id="activitySearch" placeholder="Search activities..."><select id="activityCategory"><option value="">All categories</option></select></div><div id="activityCards" class="cards"></div></section>
+<section id="peopleView" class="view"><div class="topline"><div><h1>Travelers nearby</h1><p>Discover people with similar interests.</p></div></div><div class="searchbar"><input id="peopleSearch" placeholder="Search people, city or interests..."></div><div id="peopleCards" class="cards"></div></section>
+<section id="messagesView" class="view"><div class="topline"><div><h1>Messages</h1><p>Chat inside an activity and figure out the details.</p></div></div><div id="messageChooser" class="cards"></div><div id="chatArea" style="display:none;margin-top:17px" class="detail-card"></div></section>
+<section id="tripsView" class="view"><div class="topline"><div><h1>My Trips</h1><p>Plan a trip and find people going the same way.</p></div><button class="primary" onclick="openTrip()">+ Add Trip</button></div><div id="tripCards" class="cards"></div></section>
 </main>
-
-<div id="modal" class="modal">
-  <div class="box">
-    <h2>Create an activity</h2>
-    <form id="form">
-      <div class="grid">
-        <input name="title" placeholder="Activity name" required>
-
-        <select name="category" id="createCategory" required></select>
-
-        <select name="location_name" id="createLocation" class="full" required>
-          <option value="">Select Bengaluru location</option>
-        </select>
-
-        <input name="start_time" placeholder="Saturday • 7:00 PM" required>
-        <input name="max_participants" type="number" min="1" value="10" placeholder="Max participants">
-
-        <textarea name="description" placeholder="Tell travelers what this activity is about..."></textarea>
-      </div>
-
-      <div class="actions">
-        <button type="button" class="secondary" onclick="closeModal()">Cancel</button>
-        <button class="primary">Create Activity</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="authModal" class="modal">
-  <div class="box">
-    <h2 id="authTitle">Log in to Wandora</h2>
-    <p id="authSubtitle" style="color:#697386">Join activities and create your profile.</p>
-    <form id="authForm">
-      <div class="grid">
-        <input id="authUsername" name="username" placeholder="Username" style="display:none">
-        <input id="authEmail" name="email" type="email" placeholder="Email" required class="full">
-        <input id="authPassword" name="password" type="password" placeholder="Password (min 6 characters)" required class="full">
-        <input id="authCity" name="city" value="Bengaluru" placeholder="City" style="display:none" class="full">
-      </div>
-      <div class="actions">
-        <button type="button" class="secondary" onclick="closeAuthModal()">Cancel</button>
-        <button class="primary" id="authSubmit">Log in</button>
-      </div>
-    </form>
-    <p style="text-align:center;margin:16px 0 0">
-      <button type="button" class="secondary" id="authSwitch" onclick="toggleAuthMode()">Create an account</button>
-    </p>
-  </div>
-</div>
-
-<div id="profileModal" class="modal">
-  <div class="box">
-    <h2>Your profile</h2>
-    <form id="profileForm">
-      <div class="grid">
-        <input name="username" id="profileUsername" placeholder="Username" required>
-        <input name="city" id="profileCity" placeholder="City">
-        <input name="interests" id="profileInterests" placeholder="Interests (e.g. travel, trekking, food)" class="full">
-        <input name="avatar_url" id="profileAvatar" placeholder="Profile photo URL (optional)" class="full">
-        <textarea name="bio" id="profileBio" placeholder="Tell people a little about you..."></textarea>
-      </div>
-      <div class="actions">
-        <button type="button" class="secondary" onclick="logout()">Log out</button>
-        <button type="button" class="secondary" onclick="closeProfileModal()">Cancel</button>
-        <button class="primary">Save Profile</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div id="createModal" class="modal"><div class="box"><h2>Create an activity</h2><form id="form"><div class="grid"><input name="title" placeholder="What are you planning?" required><select name="category" id="createCategory" required></select><select name="location_name" id="createLocation" class="full" required><option value="">📍 Select Bengaluru location</option></select><input name="start_time" placeholder="Today • 7:30 PM" required><input name="max_participants" type="number" min="1" value="6"><textarea name="description" class="full" placeholder="Tell travelers about this activity..."></textarea></div><div class="actions"><button type="button" class="secondary" onclick="closeCreate()">Cancel</button><button class="primary">Create Activity</button></div></form></div></div>
+<div id="authModal" class="modal"><div class="box auth-box"><h2 id="authTitle">Log in to Wandora</h2><p class="muted">Meet people. Explore places. Create memories.</p><div class="auth-tabs"><button id="loginTab" class="auth-tab active" onclick="showAuthPane('login')">Log in</button><button id="signupTab" class="auth-tab" onclick="showAuthPane('signup')">Create account</button></div>
+<div id="loginPane" class="auth-pane active"><div class="google-auth-wrap"><div id="googleSignInButton"></div><p class="google-note">Continue securely with your Google account.</p></div><div class="auth-divider"><span>or</span></div><form id="loginForm" class="auth-form"><input name="email" type="email" autocomplete="email" placeholder="Email address" required><input name="password" type="password" autocomplete="current-password" placeholder="Password" required><div id="loginError" class="auth-error"></div><button class="auth-primary">Log in</button></form><div class="auth-helper"><button class="auth-link" onclick="showAuthPane('forgot');return false">Forgot password?</button></div><p class="muted small auth-helper">Google login uses Google's own password and verification flow. Wandora never sees your Google password.</p></div>
+<div id="signupPane" class="auth-pane"><div class="google-auth-wrap"><div id="googleSignUpButton"></div><p class="google-note">Create your Wandora account with Google.</p></div><div class="auth-divider"><span>or create with email</span></div><form id="signupForm" class="auth-form"><input name="username" autocomplete="username" placeholder="Username" minlength="2" maxlength="40" required><input name="email" type="email" autocomplete="email" placeholder="Email address" required><input name="password" type="password" autocomplete="new-password" placeholder="Password (min 6 characters)" minlength="6" required><input name="city" placeholder="City" value="Bengaluru"><div id="signupError" class="auth-error"></div><button class="auth-primary">Create account</button></form><p class="password-note">We'll email you a 6-digit verification code. It expires in 10 minutes.</p></div>
+<div id="verifyPane" class="auth-pane"><button class="auth-link auth-back" onclick="showAuthPane('login')">← Back to login</button><h3>Verify your email</h3><p class="muted">Enter the 6-digit code we emailed to <b id="verifyEmailLabel"></b>. The code expires in 10 minutes.</p><form id="verifyForm" class="auth-form"><input id="verifyCode" name="code" class="code-input" inputmode="numeric" maxlength="6" placeholder="000000" required><div id="verifyError" class="auth-error"></div><button class="auth-primary">Verify email</button></form><div class="auth-helper"><button class="auth-link" onclick="resendVerification();return false">Resend code</button></div></div>
+<div id="forgotPane" class="auth-pane"><button class="auth-link auth-back" onclick="showAuthPane('login')">← Back to login</button><h3>Forgot password?</h3><p class="muted">Enter your email and we'll send a 6-digit reset code. The code expires in 10 minutes.</p><form id="forgotForm" class="auth-form"><input name="email" type="email" autocomplete="email" placeholder="Email address" required><div id="forgotError" class="auth-error"></div><button class="auth-primary">Send reset code</button></form></div>
+<div id="resetPane" class="auth-pane"><button class="auth-link auth-back" onclick="showAuthPane('forgot')">← Back</button><h3>Reset your password</h3><p class="muted">Enter the 6-digit code and choose a new password.</p><form id="resetForm" class="auth-form"><input id="resetEmail" name="email" type="email" autocomplete="email" placeholder="Email address" required><input name="code" class="code-input" inputmode="numeric" maxlength="6" placeholder="000000" required><input name="new_password" type="password" autocomplete="new-password" placeholder="New password (min 6 characters)" minlength="6" required><div id="resetError" class="auth-error"></div><button class="auth-primary">Reset password</button></form></div>
+<div class="actions"><button type="button" class="secondary" onclick="closeAuthModal()">Cancel</button></div></div></div>
+<div id="profileModal" class="modal"><div class="box"><h2>Your profile</h2><form id="profileForm"><div class="grid"><input id="profileUsername" name="username" placeholder="Username" required><input id="profileCity" name="city" placeholder="City"><input id="profileInterests" name="interests" placeholder="Travel, food, photography..." class="full"><input id="profileAvatar" name="avatar_url" placeholder="Profile photo URL (optional)" class="full"><textarea id="profileBio" name="bio" placeholder="Tell people a little about you..."></textarea></div><div class="actions"><button type="button" class="secondary" onclick="logout()">Log out</button><button type="button" class="secondary" onclick="closeProfileModal()">Cancel</button><button class="primary">Save Profile</button></div></form></div></div>
+<div id="tripModal" class="modal"><div class="box"><h2>Add a trip</h2><form id="tripForm"><div class="grid"><input name="destination" placeholder="Destination e.g. Goa" class="full" required><input name="start_date" type="date" required><input name="end_date" type="date" required><textarea name="description" placeholder="What are you looking for on this trip?" class="full"></textarea></div><div class="actions"><button type="button" class="secondary" onclick="closeTrip()">Cancel</button><button class="primary">Save Trip</button></div></form></div></div>
+<div id="toast" class="toast"></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const API="/api/activities";
-const AUTH="/api/auth";
-let authMode="login";
-let currentUser=null;
-
-const categories=[
-  "Food","Trekking","Cafe","Photography","Music",
-  "Nightlife","Sports","Travel","Wellness","Games","Dinner"
-];
-
-const bengaluruLocations=[
-  "Indiranagar","Koramangala","HSR Layout","Whitefield","Bellandur",
-  "Marathahalli","Brookfield","Hebbal","MG Road","Jayanagar","JP Nagar",
-  "Electronic City","Yelahanka","Rajajinagar","Malleshwaram","BTM Layout",
-  "Banashankari","Kalyan Nagar","Kundalahalli","Cubbon Park","Lalbagh",
-  "Bangalore Palace","Church Street","Richmond Town","Frazer Town",
-  "JP Nagar 7th Phase","Sarjapur Road","Manyata Tech Park","Devanahalli"
-];
-
-const category=document.getElementById("category");
-const createCategory=document.getElementById("createCategory");
-const createLocation=document.getElementById("createLocation");
-const list=document.getElementById("list");
-
-categories.forEach(x=>{
-  category.insertAdjacentHTML("beforeend",`<option value="${x}">${x}</option>`);
-  createCategory.insertAdjacentHTML("beforeend",`<option value="${x}">${x}</option>`);
-});
-
-bengaluruLocations.forEach(x=>{
-  createLocation.insertAdjacentHTML("beforeend",`<option value="${x}">${x}</option>`);
-});
-
-const map=L.map("map").setView([12.9716,77.5946],11);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
-  attribution:"© OpenStreetMap contributors"
-}).addTo(map);
-
-let markers=[];
-let currentActivities=[];
-let currentView="explore";
-
-function token(){ return localStorage.getItem("wandora_token"); }
-
-function authHeaders(json=false){
-  const headers={};
-  if(json) headers["Content-Type"]="application/json";
-  const t=token();
-  if(t) headers["Authorization"]=`Bearer ${t}`;
-  return headers;
-}
-
-async function refreshUser(){
-  const t=token();
-  if(!t){ updateAuthUI(); return; }
-  try{
-    const response=await fetch(`${AUTH}/me`,{headers:authHeaders()});
-    if(!response.ok) throw new Error("session expired");
-    currentUser=await response.json();
-  }catch(e){
-    localStorage.removeItem("wandora_token");
-    currentUser=null;
-  }
-  updateAuthUI();
-}
-
-function updateAuthUI(){
-  const loginBtn=document.getElementById("loginBtn");
-  const profileBtn=document.getElementById("profileBtn");
-  if(currentUser){
-    loginBtn.style.display="none";
-    profileBtn.style.display="inline-flex";
-    const initial=escapeHtml(currentUser.username.slice(0,1).toUpperCase());
-    profileBtn.innerHTML=`<span class="profile-avatar">${initial}</span>${escapeHtml(currentUser.username)}`;
-  }else{
-    loginBtn.style.display="inline-block";
-    profileBtn.style.display="none";
-  }
-}
-
-function openAuthModal(){
-  document.getElementById("authModal").classList.add("show");
-  setAuthMode("login");
-}
-function closeAuthModal(){document.getElementById("authModal").classList.remove("show")}
-function setAuthMode(mode){
-  authMode=mode;
-  const register=mode==="register";
-  document.getElementById("authTitle").textContent=register?"Create your Wandora account":"Log in to Wandora";
-  document.getElementById("authSubtitle").textContent=register?"Create a profile and start meeting people.":"Join activities and create your profile.";
-  document.getElementById("authUsername").style.display=register?"block":"none";
-  document.getElementById("authCity").style.display=register?"block":"none";
-  document.getElementById("authUsername").required=register;
-  document.getElementById("authCity").required=false;
-  document.getElementById("authSubmit").textContent=register?"Create account":"Log in";
-  document.getElementById("authSwitch").textContent=register?"I already have an account":"Create an account";
-}
-function toggleAuthMode(){setAuthMode(authMode==="login"?"register":"login")}
-
-async function submitAuth(e){
-  e.preventDefault();
-  const form=e.target;
-  const body=Object.fromEntries(new FormData(form));
-  try{
-    const response=await fetch(`${AUTH}/${authMode==="register"?"register":"login"}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    const data=await response.json();
-    if(!response.ok){toast(data.detail||"Authentication failed");return;}
-    localStorage.setItem("wandora_token",data.access_token);
-    currentUser=data.user;
-    updateAuthUI();
-    closeAuthModal();
-    form.reset();
-    document.getElementById("authCity").value="Bengaluru";
-    toast(authMode==="register"?"Welcome to Wandora 🎉":"Welcome back 🎉");
-    load();
-  }catch(e){toast("Could not connect to server")}
-}
-
-async function openProfileModal(){
-  await refreshUser();
-  if(!currentUser){openAuthModal();return;}
-  document.getElementById("profileUsername").value=currentUser.username||"";
-  document.getElementById("profileCity").value=currentUser.city||"Bengaluru";
-  document.getElementById("profileInterests").value=currentUser.interests||"";
-  document.getElementById("profileAvatar").value=currentUser.avatar_url||"";
-  document.getElementById("profileBio").value=currentUser.bio||"";
-  document.getElementById("profileModal").classList.add("show");
-}
-function closeProfileModal(){document.getElementById("profileModal").classList.remove("show")}
-function logout(){
-  localStorage.removeItem("wandora_token");
-  currentUser=null;
-  updateAuthUI();
-  closeProfileModal();
-  toast("Logged out");
-}
-
-function switchView(view){
-  currentView=view;
-  document.querySelectorAll(".nav-btn").forEach(btn=>{
-    btn.classList.toggle("active",btn.dataset.view===view);
-  });
-
-  const title=document.getElementById("pageTitle");
-  const subtitle=document.getElementById("pageSubtitle");
-
-  if(view==="activities"){
-    title.textContent="Activities";
-    subtitle.textContent="Browse activities created by the Wandora community.";
-  }else{
-    title.textContent="Explore activities";
-    subtitle.textContent="Discover what's happening around Bengaluru and meet fellow travelers.";
-  }
-
-  load();
-}
-
-function comingSoon(name){
-  toast(`${name} is coming next 🚀`);
-}
-
-
-async function load(){
-  try{
-    const q=document.getElementById("search").value.trim();
-    const c=category.value;
-    const params=new URLSearchParams();
-    if(q) params.set("q",q);
-    if(c) params.set("category",c);
-
-    const response=await fetch(API+"?"+params.toString());
-    if(!response.ok) throw new Error("API request failed");
-
-    currentActivities=await response.json();
-    render(currentActivities);
-    document.getElementById("status").textContent="Live database";
-  }catch(error){
-    document.getElementById("status").textContent="API error";
-    list.innerHTML=`<div class="empty"><h3>Could not load activities</h3><p>Make sure FastAPI is running.</p></div>`;
-  }
-}
-
-function render(data){
-  document.getElementById("count").textContent=`${data.length} ${data.length===1?"activity":"activities"}`;
-
-  markers.forEach(m=>m.remove());
-  markers=[];
-
-  if(data.length===0){
-    list.innerHTML=`
-      <div class="empty">
-        <h3>No activities yet</h3>
-        <p>${currentView === "activities" ? "No community activities have been created yet." : "Be the first person to create an activity on Wandora."}</p>
-        <div class="auth-actions">
-    <button id="loginBtn" class="secondary" onclick="openAuthModal()">Log in</button>
-    <button id="profileBtn" class="user-pill" style="display:none" onclick="openProfileModal()"></button>
-    <button class="primary" onclick="openModal()">+ Create Activity</button>
-  </div>
-      </div>`;
-    map.setView([12.9716,77.5946],11);
+const API='/api/activities',AUTH='/api/auth';const GOOGLE_CLIENT_ID=window.WANDORA_GOOGLE_CLIENT_ID||'440042528947-9ukr8t42bv12oqvjunjai129dadm5ptk.apps.googleusercontent.com';let currentUser=null,authMode='login',currentActivities=[],markers=[],map,currentView='explore';
+const categories=['Food','Trekking','Cafe','Photography','Music','Nightlife','Sports','Travel','Wellness','Games','Dinner'];const locations=['Indiranagar','Koramangala','HSR Layout','Whitefield','Bellandur','Marathahalli','Brookfield','Hebbal','MG Road','Jayanagar','JP Nagar','Electronic City','Yelahanka','Rajajinagar','Malleshwaram','BTM Layout','Banashankari','Kalyan Nagar','Kundalahalli','Cubbon Park','Lalbagh','Bangalore Palace','Church Street','Richmond Town','Frazer Town','JP Nagar 7th Phase','Sarjapur Road','Manyata Tech Park','Devanahalli'];
+const $=id=>document.getElementById(id);function token(){return localStorage.getItem('wandora_token')}function headers(json=false){const h={};if(json)h['Content-Type']='application/json';if(token())h.Authorization='Bearer '+token();return h}function toast(x){$('toast').textContent=x;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2400)}
+function fillSelects(){categories.forEach(x=>{['category','activityCategory','createCategory'].forEach(id=>$(id)?.insertAdjacentHTML('beforeend',`<option value="${x}">${x}</option>`))});locations.forEach(x=>$('createLocation').insertAdjacentHTML('beforeend',`<option value="${x}">${x}</option>`))}fillSelects();
+function switchView(view){currentView=view;document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(view+'View').classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));if(view==='explore')loadActivities();if(view==='activities')renderActivitiesView();if(view==='people')loadPeople();if(view==='messages')loadMessageChooser();if(view==='trips')loadTrips();if(map)setTimeout(()=>map.invalidateSize(),100)}
+function initMap(){map=L.map('map').setView([12.9716,77.5946],11);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map)}initMap();
+async function loadActivities(){const q=$('search').value.trim(),c=$('category').value;let url=API+'?';if(q)url+='q='+encodeURIComponent(q)+'&';if(c)url+='category='+encodeURIComponent(c);const r=await fetch(url);currentActivities=await r.json();renderExplore();}
+function activityCard(a){const full=a.joined>=a.max_participants;return `<div class="activity" onclick="selectActivity(${a.id})"><div class="activity-top"><h3>${escapeHtml(a.title)}</h3><span class="tag">${escapeHtml(a.category)}</span></div><p>📍 ${escapeHtml(a.location_name)}</p><p>🕐 ${escapeHtml(a.start_time)}</p><p>👤 ${escapeHtml(a.host)} · ${a.joined}/${a.max_participants} going</p><button class="join" onclick="event.stopPropagation();joinActivity(${a.id})" ${full?'disabled':''}>${full?'Full':'Join activity'}</button></div>`}
+function renderExplore(){ $('count').textContent=currentActivities.length+' activit'+(currentActivities.length===1?'y':'ies');$('list').innerHTML=currentActivities.length?currentActivities.map(activityCard).join(''):`<div class="empty"><h3>No activities yet</h3><p>Be the first person to create something.</p><button class="primary" onclick="openCreate()">+ Create Activity</button></div>`;markers.forEach(m=>m.remove());markers=[];currentActivities.forEach(a=>{const m=L.marker([a.latitude,a.longitude]).addTo(map).bindPopup(`<b>${escapeHtml(a.title)}</b><br>📍 ${escapeHtml(a.location_name)}<br>🕐 ${escapeHtml(a.start_time)}`);m.on('click',()=>{});markers.push(m)});}
+function renderActivitiesView(){loadActivities().then(()=>{$('activityCards').innerHTML=currentActivities.length?currentActivities.map(activityCard).join(''):`<div class="empty"><h3>No activities yet</h3><p>Create the first one.</p><button class="primary" onclick="openCreate()">Create Activity</button></div>`})}
+function selectActivity(id){const a=currentActivities.find(x=>x.id===id);if(!a)return;map.setView([a.latitude,a.longitude],14);const m=markers[currentActivities.indexOf(a)];if(m)m.openPopup()}
+async function joinActivity(id){if(!token()){openAuthModal();return}const r=await fetch(`${API}/${id}/join`,{method:'POST',headers:headers()});const d=await r.json();if(!r.ok){toast(d.detail||'Could not join');return}toast('You joined the activity 🎉');loadActivities()}
+$('search').addEventListener('input',debounce(loadActivities,250));$('category').addEventListener('change',loadActivities);$('activitySearch').addEventListener('input',debounce(renderActivitiesView,250));$('activityCategory').addEventListener('change',renderActivitiesView);$('peopleSearch').addEventListener('input',debounce(loadPeople,250));function debounce(fn,ms){let t;return()=>{clearTimeout(t);t=setTimeout(fn,ms)}}
+function openCreate(){if(!token()){openAuthModal();return}$('createModal').classList.add('show')}function closeCreate(){$('createModal').classList.remove('show')}
+$('form').addEventListener('submit',async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));data.max_participants=Number(data.max_participants);const r=await fetch(API,{method:'POST',headers:headers(true),body:JSON.stringify(data)});const d=await r.json();if(!r.ok){toast(d.detail||'Could not create activity');return}closeCreate();e.target.reset();toast('Activity created 🎉');loadActivities();if(currentView!=='explore')switchView('activities')});
+let googleInitialized=false;
+function initGoogleSignIn(){
+  if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogleSignIn,300);return}
+  if(!GOOGLE_CLIENT_ID||GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
+    $('googleSignInButton').innerHTML='<div class="muted">Google sign-in is not configured yet.</div>';
+    $('googleSignUpButton').innerHTML='';
     return;
   }
-
-  list.innerHTML=data.map(a=>`
-    <div class="card" data-id="${a.id}" onclick="focusActivity(${a.id})">
-      <h3>${escapeHtml(a.title)}</h3>
-      <div class="meta">
-        📍 ${escapeHtml(a.location_name)}<br>
-        🕒 ${escapeHtml(a.start_time)}<br>
-        👥 ${a.joined}/${a.max_participants} · Host: ${escapeHtml(a.host)}
-      </div>
-      <span class="tag">${escapeHtml(a.category)}</span>
-    </div>
-  `).join("");
-
-  data.forEach(a=>{
-    const marker=L.marker([a.latitude,a.longitude])
-      .addTo(map)
-      .bindPopup(`
-        <b>${escapeHtml(a.title)}</b><br>
-        📍 ${escapeHtml(a.location_name)}<br>
-        🕒 ${escapeHtml(a.start_time)}<br>
-        👥 ${a.joined}/${a.max_participants}<br>
-        <button onclick="joinActivity(${a.id})">Join Activity</button>
-      `);
-
-    marker.activityId=a.id;
-    markers.push(marker);
-  });
-
-  if(data.length===1){
-    map.setView([data[0].latitude,data[0].longitude],14);
-  }else{
-    map.fitBounds(L.latLngBounds(data.map(a=>[a.latitude,a.longitude])),{padding:[25,25]});
+  if(!googleInitialized){
+    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});
+    googleInitialized=true;
   }
+  $('googleSignInButton').innerHTML='';
+  $('googleSignUpButton').innerHTML='';
+  google.accounts.id.renderButton($('googleSignInButton'),{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:320});
+  google.accounts.id.renderButton($('googleSignUpButton'),{theme:'outline',size:'large',shape:'pill',text:'signup_with',width:320});
 }
-
-function focusActivity(id){
-  const activity=currentActivities.find(a=>a.id===id);
-  if(!activity)return;
-
-  document.querySelectorAll(".card").forEach(c=>{
-    c.classList.toggle("selected",Number(c.dataset.id)===id);
-  });
-
-  map.setView([activity.latitude,activity.longitude],14);
-
-  const marker=markers.find(m=>m.activityId===id);
-  if(marker) marker.openPopup();
+function showAuthPane(pane){
+  ['login','signup','verify','forgot','reset'].forEach(x=>$(x+'Pane').classList.toggle('active',x===pane));
+  $('loginTab').classList.toggle('active',pane==='login');$('signupTab').classList.toggle('active',pane==='signup');
+  $('authTitle').textContent=pane==='signup'?'Create your Wandora account':pane==='verify'?'Verify your email':pane==='forgot'?'Reset your Wandora password':pane==='reset'?'Reset your Wandora password':'Log in to Wandora';
+  if(pane==='login'||pane==='signup')initGoogleSignIn();
 }
-
-async function joinActivity(id){
-  try{
-    if(!currentUser){openAuthModal();toast("Log in to join an activity");return;}
-    const response=await fetch(`${API}/${id}/join`,{method:"POST",headers:authHeaders()});
-    const data=await response.json();
-
-    if(!response.ok){
-      toast(data.detail || "Could not join activity");
-      return;
-    }
-
-    toast("Joined activity 🎉");
-    load();
-  }catch(e){
-    toast("Could not connect to server");
-  }
-}
-
-document.getElementById("authForm").addEventListener("submit",submitAuth);
-
-document.getElementById("profileForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  if(!currentUser){return;}
-  const body=Object.fromEntries(new FormData(e.target));
-  try{
-    const response=await fetch(`${AUTH}/me`,{method:"PUT",headers:authHeaders(true),body:JSON.stringify(body)});
-    const data=await response.json();
-    if(!response.ok){toast(data.detail||"Could not update profile");return;}
-    currentUser=data;
-    updateAuthUI();
-    closeProfileModal();
-    toast("Profile updated 🎉");
-    load();
-  }catch(e){toast("Could not connect to server");}
-});
-
-document.getElementById("form").addEventListener("submit",async e=>{
-  e.preventDefault();
-
-  if(!currentUser){
-    closeModal();
-    openAuthModal();
-    toast("Log in to create an activity");
-    return;
-  }
-
-  const body=Object.fromEntries(new FormData(e.target));
-  body.max_participants=Number(body.max_participants);
-
-  try{
-    const response=await fetch(API,{
-      method:"POST",
-      headers:authHeaders(true),
-      body:JSON.stringify(body)
-    });
-
-    const data=await response.json();
-
-    if(!response.ok){
-      toast(data.detail || "Could not create activity");
-      return;
-    }
-
-    closeModal();
-    e.target.reset();
-    createLocation.value="";
-    toast("Activity created 🎉");
-    load();
-  }catch(error){
-    toast("Could not connect to server");
-  }
-});
-
-function openModal(){document.getElementById("modal").classList.add("show")}
-function closeModal(){document.getElementById("modal").classList.remove("show")}
-
-function toast(message){
-  const t=document.getElementById("toast");
-  t.textContent=message;
-  t.style.display="block";
-  setTimeout(()=>t.style.display="none",2200);
-}
-
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
-}
-
-document.getElementById("search").addEventListener("input",load);
-category.addEventListener("change",load);
-
-refreshUser().then(load);
-</script>
-</body>
-</html>
+function openAuthModal(){showAuthPane('login');$('authModal').classList.add('show');initGoogleSignIn()}
+function closeAuthModal(){$('authModal').classList.remove('show')}
+async function apiJson(path,body){const r=await fetch(AUTH+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let d={};try{d=await r.json()}catch{}return {r,d}}
+function setAuthError(id,msg){$(id).textContent=msg||''}
+function finishLogin(d){localStorage.setItem('wandora_token',d.access_token);currentUser=d.user;closeAuthModal();updateAuthUI();toast('Welcome to Wandora, '+currentUser.username+'!')}
+async function handleGoogleCredential(response){const {r,d}=await apiJson('/google',{credential:response.credential});if(!r.ok){toast(d.detail||'Google sign-in failed');return}finishLogin(d)}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();setAuthError('loginError','');const data=Object.fromEntries(new FormData(e.target));const {r,d}=await apiJson('/login',data);if(r.status===403&&d.detail==='EMAIL_NOT_VERIFIED'){window.verifyEmail=data.email;showAuthPane('verify');$('verifyEmailLabel').textContent=data.email;toast('Please verify your email first');return}if(!r.ok){setAuthError('loginError',d.detail||'Could not log in');return}finishLogin(d)})
+$('signupForm').addEventListener('submit',async e=>{e.preventDefault();setAuthError('signupError','');const data=Object.fromEntries(new FormData(e.target));const {r,d}=await apiJson('/register',data);if(!r.ok){setAuthError('signupError',d.detail||'Could not create account');return}window.verifyEmail=data.email;showAuthPane('verify');$('verifyEmailLabel').textContent=data.email;$('verifyCode').value='';toast(d.message||'Check your email for the verification code')})
+$('verifyForm').addEventListener('submit',async e=>{e.preventDefault();setAuthError('verifyError','');const data=Object.fromEntries(new FormData(e.target));data.email=window.verifyEmail;const {r,d}=await apiJson('/verify-email',data);if(!r.ok){setAuthError('verifyError',d.detail||'Could not verify email');return}finishLogin(d)})
+async function resendVerification(){if(!window.verifyEmail)return;setAuthError('verifyError','');const {r,d}=await apiJson('/resend-verification',{email:window.verifyEmail});if(!r.ok){setAuthError('verifyError',d.detail||'Could not resend code');return}$('verifyCode').value='';toast(d.message||'New verification code sent')}
+$('forgotForm').addEventListener('submit',async e=>{e.preventDefault();setAuthError('forgotError','');const data=Object.fromEntries(new FormData(e.target));window.resetEmail=data.email;const {r,d}=await apiJson('/forgot-password',data);if(!r.ok){setAuthError('forgotError',d.detail||'Could not send reset code');return}$('resetEmail').value=data.email;$('resetForm input[name="code"]').value='';showAuthPane('reset');toast(d.message||'If an account exists, check your email for the reset code')})
+$('resetForm').addEventListener('submit',async e=>{e.preventDefault();setAuthError('resetError','');const data=Object.fromEntries(new FormData(e.target));const {r,d}=await apiJson('/reset-password',data);if(!r.ok){setAuthError('resetError',d.detail||'Could not reset password');return}toast(d.message||'Password reset successfully');e.target.reset();$('resetEmail').value=window.resetEmail||'';showAuthPane('login')})
+async function loadMe(){if(!token())return;const r=await fetch(AUTH+'/me',{headers:headers()});if(r.ok){currentUser=await r.json();updateAuthUI()}else logout(false)}function updateAuthUI(){if(currentUser){$('loginBtn').style.display='none';$('profileBtn').style.display='block';$('profileBtn').textContent='👤 '+currentUser.username}else{$('loginBtn').style.display='block';$('profileBtn').style.display='none'}}
+function openProfileModal(){if(!currentUser)return;$('profileUsername').value=currentUser.username||'';$('profileCity').value=currentUser.city||'';$('profileInterests').value=currentUser.interests||'';$('profileAvatar').value=currentUser.avatar_url||'';$('profileBio').value=currentUser.bio||'';$('profileModal').classList.add('show')}function closeProfileModal(){$('profileModal').classList.remove('show')}
+$('profileForm').addEventListener('submit',async e=>{e.preventDefault();const r=await fetch(AUTH+'/me',{method:'PUT',headers:headers(true),body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});const d=await r.json();if(!r.ok){toast(d.detail||'Could not save profile');return}currentUser=d;updateAuthUI();closeProfileModal();toast('Profile updated')});function logout(show=true){localStorage.removeItem('wandora_token');currentUser=null;updateAuthUI();closeProfileModal();if(show)toast('Logged out')}
+async function loadPeople(){const q=$('peopleSearch').value.trim();const r=await fetch('/api/people'+(q?'?q='+encodeURIComponent(q):''));const people=await r.json();$('peopleCards').innerHTML=people.length?people.map(p=>`<div class="person"><div class="person-head"><div class="avatar">${p.avatar_url?`<img src="${escapeAttr(p.avatar_url)}" class="avatar">`:initial(p.username)}</div><div><h3>${escapeHtml(p.username)}</h3><div class="muted">📍 ${escapeHtml(p.city)} · ${p.activities_hosted} hosted</div></div></div><p class="muted">${escapeHtml(p.bio||'Open to meeting fellow travelers.')}</p><div class="chips">${(p.interests||'Travel').split(',').slice(0,5).map(x=>`<span class="chip">${escapeHtml(x.trim())}</span>`).join('')}</div><button class="secondary" onclick="toast('Profile view coming next')">View profile</button></div>`).join(''):`<div class="empty"><h3>No travelers yet</h3><p>Create an account and invite your friends.</p></div>`}
+async function loadMessageChooser(){const r=await fetch(API);const acts=await r.json();$('messageChooser').innerHTML=acts.length?acts.map(a=>`<div class="person" onclick="openChat(${a.id})"><h3>💬 ${escapeHtml(a.title)}</h3><p class="muted">📍 ${escapeHtml(a.location_name)} · ${a.joined} going</p><button class="secondary">Open group chat</button></div>`).join(''):`<div class="empty"><h3>No activity chats yet</h3><p>Join or create an activity to start chatting.</p></div>`}
+async function openChat(id){const a=currentActivities.find(x=>x.id===id);const r=await fetch(`${API}/${id}`);const act=await r.json();$('chatArea').style.display='block';$('chatArea').innerHTML=`<div class="chat"><h2>💬 ${escapeHtml(act.title)}</h2><div class="muted">${escapeHtml(act.location_name)} · ${escapeHtml(act.start_time)}</div><div id="messages" class="messages"></div><form class="chatform" onsubmit="sendMessage(event,${id})"><input id="messageInput" placeholder="Say something to the group..." required><button class="primary">Send</button></form></div>`;loadMessages(id);$('chatArea').scrollIntoView({behavior:'smooth'})}
+async function loadMessages(id){const r=await fetch(`/api/activities/${id}/messages`);const ms=await r.json();$('messages').innerHTML=ms.length?ms.map(m=>`<div class="msg ${currentUser&&m.user_id===currentUser.id?'mine':''}"><b>${escapeHtml(m.username)}</b><br><p>${escapeHtml(m.text)}</p></div>`).join(''):`<div class="empty"><p>No messages yet. Say hello 👋</p></div>`;$('messages').scrollTop=$('messages').scrollHeight}
+async function sendMessage(e,id){e.preventDefault();if(!token()){openAuthModal();return}const input=$('messageInput');const r=await fetch('/api/messages',{method:'POST',headers:headers(true),body:JSON.stringify({activity_id:id,text:input.value})});const d=await r.json();if(!r.ok){toast(d.detail||'Could not send message');return}input.value='';loadMessages(id)}
+async function loadTrips(){const r=await fetch('/api/trips');const trips=await r.json();$('tripCards').innerHTML=trips.length?trips.map(t=>`<div class="trip"><h3>🌍 ${escapeHtml(t.destination)}</h3><p><b>${escapeHtml(t.start_date)}</b> → <b>${escapeHtml(t.end_date)}</b></p><p class="muted">${escapeHtml(t.description||'Looking for people to join this trip.')}</p><p class="muted">Created by ${escapeHtml(t.username)}</p><button class="secondary" onclick="toast('Trip matching is next')">Find travelers</button></div>`).join(''):`<div class="empty"><h3>No trips yet</h3><p>Add your next destination and start finding people.</p><button class="primary" onclick="openTrip()">+ Add Trip</button></div>`}
+function openTrip(){if(!token()){openAuthModal();return}$('tripModal').classList.add('show')}function closeTrip(){$('tripModal').classList.remove('show')}$('tripForm').addEventListener('submit',async e=>{e.preventDefault();const r=await fetch('/api/trips',{method:'POST',headers:headers(true),body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});const d=await r.json();if(!r.ok){toast(d.detail||'Could not save trip');return}closeTrip();e.target.reset();toast('Trip added');loadTrips()});
+function initial(s){return (s||'?').slice(0,1).toUpperCase()}function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function escapeAttr(s){return escapeHtml(s)}loadMe();loadActivities();
+</script></body></html>

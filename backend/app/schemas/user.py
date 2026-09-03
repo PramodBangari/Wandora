@@ -8,9 +8,32 @@ class UserCreate(BaseModel):
     city: str = Field(default="Bengaluru", max_length=100)
 
 
+class GoogleLoginRequest(BaseModel):
+    credential: str = Field(min_length=20)
+
+
 class LoginRequest(BaseModel):
     email: str = Field(min_length=5, max_length=255)
     password: str = Field(min_length=6, max_length=128)
+
+
+class EmailCodeRequest(BaseModel):
+    email: str = Field(min_length=5, max_length=255)
+    code: str = Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
+
+
+class ResendVerificationRequest(BaseModel):
+    email: str = Field(min_length=5, max_length=255)
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str = Field(min_length=5, max_length=255)
+
+
+class ResetPasswordRequest(BaseModel):
+    email: str = Field(min_length=5, max_length=255)
+    code: str = Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
+    new_password: str = Field(min_length=6, max_length=128)
 
 
 class UserUpdate(BaseModel):
@@ -25,6 +48,7 @@ class UserOut(BaseModel):
     id: int
     username: str
     email: str
+    email_verified: bool
     bio: str
     interests: str
     city: str
@@ -38,3 +62,7 @@ class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserOut
+
+
+class MessageOut(BaseModel):
+    message: str
